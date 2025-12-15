@@ -6,14 +6,14 @@
 
 body {
   width: 360px;
-  padding: 5px;
+  padding: 14px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .container {
   background: rgba(255, 255, 255, 0.96);
-  border-radius: 0px;
+  border-radius: 20px;
   padding: 20px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
