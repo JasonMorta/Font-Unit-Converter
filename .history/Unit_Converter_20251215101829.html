@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Size Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 3.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+        }
+
+        .preview {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 32px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .preview-text {
+            color: #333;
+            font-weight: 600;
+            transition: font-size 0.2s ease;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            min-width: 80px;
+            font-size: 0.95rem;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="number"]:hover {
+            border-color: #764ba2;
+        }
+
+        .unit {
+            font-weight: 600;
+            color: #764ba2;
+            min-width: 50px;
+            font-size: 0.9rem;
+        }
+
+        .info {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Font Size Converter</h1>
+        <p class="subtitle">All units synced in real-time</p>
+
+        <div class="preview">
+            <div class="preview-text" id="previewText">The quick brown fox</div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="px">Pixels</label>
+                <input type="number" id="px" value="32" step="0.1">
+                <span class="unit">px</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="pt">Points</label>
+                <input type="number" id="pt" value="24" step="0.1">
+                <span class="unit">pt</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="em">Em</label>
+                <input type="number" id="em" value="2" step="0.01">
+                <span class="unit">em</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="rem">Rem</label>
+                <input type="number" id="rem" value="2" step="0.01">
+                <span class="unit">rem</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="percent">Percent</label>
+                <input type="number" id="percent" value="200" step="1">
+                <span class="unit">%</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-row">
+                <label for="vw">Viewport W</label>
+                <input type="number" id="vw" value="2.4" step="0.1">
+                <span class="unit">vw</span>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>Base font size:</strong> 16px (browser default)<br>
+            <strong>H1 equivalent:</strong> 32px / 2em / 2rem / 200%
+        </div>
+    </div>
+
+    <script>
+        const inputs = {
+            px: document.getElementById('px'),
+            pt: document.getElementById('pt'),
+            em: document.getElementById('em'),
+            rem: document.getElementById('rem'),
+            percent: document.getElementById('percent'),
+            vw: document.getElementById('vw')
+        };
+
+        const previewText = document.getElementById('previewText');
+        const baseFontSize = 16;
+        let isUpdating = false;
+
+        function pxToOthers(px) {
+            return {
+                px: px,
+                pt: px * 0.75,
+                em: px / baseFontSize,
+                rem: px / baseFontSize,
+                percent: (px / baseFontSize) * 100,
+                vw: (px / window.innerWidth) * 100
+            };
+        }
+
+        function updateAll(sourceUnit, value) {
+            if (isUpdating) return;
+            isUpdating = true;
+
+            let pxValue;
+
+            switch(sourceUnit) {
+                case 'px':
+                    pxValue = parseFloat(value);
+                    break;
+                case 'pt':
+                    pxValue = parseFloat(value) / 0.75;
+                    break;
+                case 'em':
+                case 'rem':
+                    pxValue = parseFloat(value) * baseFontSize;
+                    break;
+                case 'percent':
+                    pxValue = (parseFloat(value) / 100) * baseFontSize;
+                    break;
+                case 'vw':
+                    pxValue = (parseFloat(value) / 100) * window.innerWidth;
+                    break;
+            }
+
+            if (isNaN(pxValue) || pxValue < 0) {
+                isUpdating = false;
+                return;
+            }
+
+            const converted = pxToOthers(pxValue);
+
+            for (let unit in inputs) {
+                if (unit !== sourceUnit) {
+                    inputs[unit].value = converted[unit].toFixed(unit === 'percent' ? 0 : 2);
+                }
+            }
+
+            previewText.style.fontSize = pxValue + 'px';
+
+            isUpdating = false;
+        }
+
+        for (let unit in inputs) {
+            inputs[unit].addEventListener('input', (e) => {
+                updateAll(unit, e.target.value);
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            const currentPx = parseFloat(inputs.px.value);
+            inputs.vw.value = ((currentPx / window.innerWidth) * 100).toFixed(2);
+        });
+
+        updateAll('px', 32);
+    </script>
+</body>
+</html>
